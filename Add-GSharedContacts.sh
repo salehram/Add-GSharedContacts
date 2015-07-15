@@ -121,7 +121,7 @@ do
     if [ ! "$phoneNumber2" ]; then
 	phoneNumber2="0"
     fi
-    echo "Adding new shared contact... $givenName,$familyName,$fullName,$eaddress,$displayName,$eaddress2,$phoneNumber,$phoneNumber2,$imaddress,$city,$street,$region,$postcod\
+    echo "Adding new shared contact... $givenName,$familyName,$fullName,$notes,$eaddress,$displayName,$eaddress2,$phoneNumber,$phoneNumber2,$imaddress,$city,$street,$region,$postcod\
 e,$country,$formattedAddress."
     newContact=`curl -s -i -X POST https://www.google.com/m8/feeds/contacts/$domainName/full -H "Gdata-version: 3.0" -H "Content-Type: application/atom+xml" -H "Authorization: Bearer $accessToken" --data "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom'
     xmlns:gd='http://schemas.google.com/g/2005'>
@@ -132,7 +132,7 @@ e,$country,$formattedAddress."
      <gd:familyName>$familyName</gd:familyName>
      <gd:fullName>$fullName</gd:fullName>
   </gd:name>
-  <atom:content type='text'>$Notes</atom:content>
+  <atom:content type='text'>$notes</atom:content>
   <gd:email rel='http://schemas.google.com/g/2005#work'
     primary='true'
     address='$eaddress' displayName='$displayName' />
