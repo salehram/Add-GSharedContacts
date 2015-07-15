@@ -7,6 +7,9 @@ This small shell script will allow the adding, editing and deleting of domain sh
 * cURL package (for sending GET, POST requests to Google servers)
 * jq package (for working with JSON files)
 
+# Documentation and support
+[Please visit the wiki page](https://github.com/salehram/Add-GSharedContacts/wiki) for information on the prerequisites and CSV file formatting, and I am looking forward to read the feedback and address any issue in the operation of this little script
+
 # Usage
 Add-GSharedContacts [METHOD:new,edit,delete] [FULL_PATH_TO_CLIENT_SECRETS.JSON] [FULL_PATH_TO_CONTACTS_CSV_FILE] [DOMAIN_NAME]
 
