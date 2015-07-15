@@ -16,5 +16,5 @@ Add-GSharedContacts [METHOD:new,edit,delete] [FULL_PATH_TO_CLIENT_SECRETS.JSON] 
 * [FULL_PATH_TO_CONTACTS_CSV_FILE] is the full file name and path for the CSV file that holds the contacts you want to add.
 * [DOMAIN_NAME] is the domain name which we want to add the contacts on it
 
-Example:
+Example:  
 Add-GSharedContacts new ~/Downloads/client_secrets.json ~/Documents/contacts.csv example.com
