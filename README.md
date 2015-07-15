@@ -1,1 +1,20 @@
 # Add-GSharedContacts
+Current version: 0.0.1alpha
+This small shell script will allow the adding, editing and deleting of domain shared contacts on Google apps...
+
+# Prerequisites
+* Any Linux distribution
+* cURL package (for sending GET, POST requests to Google servers)
+* jq package (for working with JSON files)
+
+# Usage
+Add-GSharedContacts [METHOD:new,edit,delete] [FULL_PATH_TO_CLIENT_SECRETS.JSON] [FULL_PATH_TO_CONTACTS_CSV_FILE] [DOMAIN_NAME]
+
+**Where:**
+* [METHOD:new,edit,delete] is the action to be used, right now only new is functional.
+* [FULL_PATH_TO_CLIENT_SECRETS.JSON] is the full path to the client_secrets.json file, including the file name.
+* [FULL_PATH_TO_CONTACTS_CSV_FILE] is the full file name and path for the CSV file that holds the contacts you want to add.
+* [DOMAIN_NAME] is the domain name which we want to add the contacts on it
+
+Example:
+Add-GSharedContacts new ~/Downloads/client_secrets.json ~/Documents/contacts.csv example.com
