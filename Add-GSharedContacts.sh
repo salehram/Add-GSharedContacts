@@ -163,7 +163,10 @@ e,$country,$formattedAddress."
   </gd:structuredPostalAddress>
 </atom:entry>"`
    # status=$newContact | grep -E 'HTTP/1.1'
-    cat <<EOF > newContact.temp
+    cat <<EOF > newContact.output
+$newContact
+EOF
+cat <<EOF > newContact.temp
 $newContact
 EOF
     status=`cat newContact.temp | grep -E 'HTTP/1.1 201 Created'`
@@ -178,7 +181,8 @@ echo -e "\n"
 echo -e "\n"
 echo -e "\n"
 echo -e "========================"
-echo -e "Finished adding contacts... cleaning up and ending"
+echo -e "Finished adding contacts... cleaning up and ending\n"
 rm -f tempToken.json
 rm -f token.json
 rm -f newContact.temp
+echo -e "Clean up is complete."
