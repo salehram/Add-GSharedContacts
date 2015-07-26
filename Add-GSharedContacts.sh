@@ -114,15 +114,56 @@ echo -e "=======================================================================
 echo -e "Reading contents of CSV file and sending requests to Google API"
 while IFS=, read givenName familyName fullName notes eaddress displayName eaddress2 phoneNumber phoneNumber2 imaddress city street region postcode country formattedAddress
 do
-    #checking if the phone numbers are empty
+    #checking for empty fields
+    if [ ! "$givenName" ]; then
+	givenName="unknown"
+    fi
+    if [ ! "$familyName" ]; then
+	familyName="unknown"
+    fi
+    if [ ! "$fullName" ]; then
+	fullName="unknown"
+    fi
+    if [ ! "$notes" ]; then
+	notes="n/a"
+    fi
+    if [ ! "$eaddress" ]; then
+	eaddress="n/a"
+    fi
+    if [ ! "$displayName" ]; then
+	displayName="unknown"
+    fi
+    if [ ! "$eaddress2" ]; then
+	eaddress2="n/a"
+    fi
     if [ ! "$phoneNumber" ]; then
 	phoneNumber="0"
     fi
     if [ ! "$phoneNumber2" ]; then
 	phoneNumber2="0"
     fi
-    echo "Adding new shared contact... $givenName,$familyName,$fullName,$notes,$eaddress,$displayName,$eaddress2,$phoneNumber,$phoneNumber2,$imaddress,$city,$street,$region,$postcod\
-e,$country,$formattedAddress."
+    if [ ! "$imaddress" ]; then
+	imaddress="n/a"
+    fi
+    if [ ! "$city" ]; then
+	city="n/a"
+    fi
+    if [ ! "$street" ]; then
+	street="n/a"
+    fi
+    if [ ! "$region" ]; then
+	region="n/a"
+    fi
+    if [ ! "$postcode" ]; then
+	postcode="n/a"
+    fi
+    if [ ! "$country" ]; then
+	country="n/a"
+    fi
+    if [ ! "$formattedAddress" ]; then
+	formattedAddress="n/a"
+    fi
+    echo "Adding new shared contact... $givenName,$familyName,$fullName,$notes,$eaddress,$displayName,$eaddress2,$phoneNumber,$phoneNumber2,$imaddress,$city,$street,$region,$postcode,$country,$formattedAddress."
     newContact=`curl -s -i -X POST https://www.google.com/m8/feeds/contacts/$domainName/full -H "Gdata-version: 3.0" -H "Content-Type: application/atom+xml" -H "Authorization: Bearer $accessToken" --data "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom'
     xmlns:gd='http://schemas.google.com/g/2005'>
   <atom:category scheme='http://schemas.google.com/g/2005#kind'
@@ -163,10 +204,7 @@ e,$country,$formattedAddress."
   </gd:structuredPostalAddress>
 </atom:entry>"`
    # status=$newContact | grep -E 'HTTP/1.1'
-    cat <<EOF > newContact.output
-$newContact
-EOF
-cat <<EOF > newContact.temp
+    cat <<EOF >> newContact.temp
 $newContact
 EOF
     status=`cat newContact.temp | grep -E 'HTTP/1.1 201 Created'`
@@ -181,8 +219,7 @@ echo -e "\n"
 echo -e "\n"
 echo -e "\n"
 echo -e "========================"
-echo -e "Finished adding contacts... cleaning up and ending\n"
+echo -e "Finished adding contacts... cleaning up and ending"
 rm -f tempToken.json
 rm -f token.json
 rm -f newContact.temp
-echo -e "Clean up is complete."
