@@ -207,6 +207,9 @@ do
     cat <<EOF >> newContact.temp
 $newContact
 EOF
+cat <<EOF >> output.temp
+$newContact
+EOF
     status=`cat newContact.temp | grep -E 'HTTP/1.1 201 Created'`
     if [ ! -z "$status" -a "$status" != " " ]; then
         echo -e "================== DONE - [$status]"
