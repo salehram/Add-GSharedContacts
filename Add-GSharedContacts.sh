@@ -116,52 +116,40 @@ while IFS=, read givenName familyName fullName notes eaddress displayName eaddre
 do
     #checking for empty fields
     if [ ! "$givenName" ]; then
-	givenName="unknown"
+	echo -e "ERROR - Value 'givenName' cannot be null, please put a value in that field then run the script again"
+	exit 1
     fi
     if [ ! "$familyName" ]; then
-	familyName="unknown"
+	echo -e "ERROR - Value 'familyName' cannot be null, please put a value in that field then run the script again"
+	exit 1
     fi
     if [ ! "$fullName" ]; then
-	fullName="unknown"
-    fi
-    if [ ! "$notes" ]; then
-	notes="n/a"
-    fi
-    if [ ! "$eaddress" ]; then
-	eaddress="n/a"
-    fi
-    if [ ! "$displayName" ]; then
-	displayName="unknown"
-    fi
-    if [ ! "$eaddress2" ]; then
-	eaddress2="n/a"
+	echo -e "ERROR - Value 'fullName' cannot be null, please put a value in that field then run the script again"
+	exit 1
     fi
     if [ ! "$phoneNumber" ]; then
-	phoneNumber="0"
+	echo -e "ERROR - Value 'phoneNumber' cannot be null, please put a value in that field then run the script again"
+	exit 1
     fi
     if [ ! "$phoneNumber2" ]; then
-	phoneNumber2="0"
-    fi
-    if [ ! "$imaddress" ]; then
-	imaddress="n/a"
+	echo -e "ERROR - Value 'phoneNumber2' cannot be null, please put a value in that field then run the script again"
+	exit 1
     fi
     if [ ! "$city" ]; then
-	city="n/a"
+	echo -e "ERROR - Value 'city' cannot be null, please put a value in that field then run the script again"
+	exit 1
     fi
     if [ ! "$street" ]; then
-	street="n/a"
+	echo -e "ERROR - Value 'street' cannot be null, please put a value in that field then run the script again"
+	exit 1
     fi
     if [ ! "$region" ]; then
-	region="n/a"
+	echo -e "ERROR - Value 'region' cannot be null, please put a value in that field then run the script again"
+	exit 1
     fi
     if [ ! "$postcode" ]; then
-	postcode="n/a"
-    fi
-    if [ ! "$country" ]; then
-	country="n/a"
-    fi
-    if [ ! "$formattedAddress" ]; then
-	formattedAddress="n/a"
+	echo -e "ERROR - Value 'postcode' cannot be null, please put a value in that field then run the script again"
+	exit 1
     fi
     echo "Adding new shared contact... $givenName,$familyName,$fullName,$notes,$eaddress,$displayName,$eaddress2,$phoneNumber,$phoneNumber2,$imaddress,$city,$street,$region,$postcode,$country,$formattedAddress."
     newContact=`curl -s -i -X POST https://www.google.com/m8/feeds/contacts/$domainName/full -H "Gdata-version: 3.0" -H "Content-Type: application/atom+xml" -H "Authorization: Bearer $accessToken" --data "<atom:entry xmlns:atom='http://www.w3.org/2005/Atom'
@@ -204,7 +192,7 @@ do
   </gd:structuredPostalAddress>
 </atom:entry>"`
    # status=$newContact | grep -E 'HTTP/1.1'
-    cat <<EOF >> newContact.temp
+    cat <<EOF > newContact.temp
 $newContact
 EOF
 cat <<EOF >> output.temp
@@ -212,7 +200,7 @@ $newContact
 EOF
     status=`cat newContact.temp | grep -E 'HTTP/1.1 201 Created'`
     if [ ! -z "$status" -a "$status" != " " ]; then
-        echo -e "================== DONE - [$status]"
+        echo -e "[OK] - [$status]"
     else
         echo "================== ERROR adding contact! - [$status]"
         exit 1
