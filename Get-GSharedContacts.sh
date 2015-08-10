@@ -19,14 +19,14 @@ if [ $# -eq 0 ]; then
     echo "Get-GSharedContacts [FULL_PATH_TO_CLIENT_SECRETS.JSON] [DOMAIN_NAME]"
     exit 1
 fi
-if [ $# -gt 3 ]; then
+if [ $# -gt 2 ]; then
     echo ""
     echo "ERROR: Too many parameters were supplied, cannot continue!"
     echo "Usage instructions:"
     echo "Get-GSharedContacts [FULL_PATH_TO_CLIENT_SECRETS.JSON] [DOMAIN_NAME]"
     exit 1
 fi
-if [ $# -lt 3 ]; then
+if [ $# -lt 2 ]; then
    echo ""
    echo "ERROR: Missing parameters"
    echo "Usage instructions:"
