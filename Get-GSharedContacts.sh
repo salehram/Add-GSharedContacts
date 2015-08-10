@@ -16,21 +16,21 @@ if [ $# -eq 0 ]; then
     echo ""
     echo "ERROR: No parameters were supplied, cannot continue!"
     echo "Usage instructions:"
-    echo "Get-GSharedContacts [FULL_PATH_TO_CLIENT_SECRETS.JSON] [DOMAIN_NAME] [OUTPUT_FILE]"
+    echo "Get-GSharedContacts [FULL_PATH_TO_CLIENT_SECRETS.JSON] [DOMAIN_NAME]"
     exit 1
 fi
 if [ $# -gt 3 ]; then
     echo ""
     echo "ERROR: Too many parameters were supplied, cannot continue!"
     echo "Usage instructions:"
-    echo "Get-GSharedContacts [FULL_PATH_TO_CLIENT_SECRETS.JSON] [DOMAIN_NAME] [OUTPUT_FILE]"
+    echo "Get-GSharedContacts [FULL_PATH_TO_CLIENT_SECRETS.JSON] [DOMAIN_NAME]"
     exit 1
 fi
 if [ $# -lt 3 ]; then
    echo ""
    echo "ERROR: Missing parameters"
    echo "Usage instructions:"
-   echo "Get-GSharedContacts [FULL_PATH_TO_CLIENT_SECRETS.JSON] [DOMAIN_NAME] [OUTPUT_FILE]"
+   echo "Get-GSharedContacts [FULL_PATH_TO_CLIENT_SECRETS.JSON] [DOMAIN_NAME]"
    exit 1
 fi
 # checking now for the JSON file if it is existing or not
@@ -55,14 +55,6 @@ echo "     Retrieved client secret:" $clientSecret
 #checking domain name
 domainName=$2
 echo -e "OK - Domain name is: $domainName"
-#checking for the output CSV file now
-OutCSVFile=$3
-if [ -f $OutCSVFile ]; then
-    # The CSV file is either not existent or was supplied wrong.
-    echo "ERROR: Please enter a non-existent CSV file name."
-    exit 1
-fi
-echo -e "OK - Output CSV file is set."
 echo -e "=========================================================================================================\n"
 echo -e "Creating the authorization URL"
 authURI="https://accounts.google.com/o/oauth2/auth?client_id=$clientID&redirect_uri=urn:ietf:wg:oauth:2.0:oob&response_type=code&scope=https://www.google.com/m8/feeds/"
