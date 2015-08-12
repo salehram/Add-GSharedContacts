@@ -85,7 +85,7 @@ echo -e ""
 echo -e "Received access token: $accessToken"
 echo -e "=========================================================================================================\n"
 echo -e "Getting the shared contacts using Google API"
-curl -i -s https://www.google.com/m8/feeds/contacts/$domainName/full -H "Authorization: Bearer $accessToken" > Get-GSharedContacts.output
+curl -i -s https://www.google.com/m8/feeds/contacts/$domainName/full?max-results=500 -H "Authorization: Bearer $accessToken" > Get-GSharedContacts.output
 #now we need to write the output data into the csv file
 readAtom () {
     local IFS=\>
@@ -111,7 +111,7 @@ while readAtom; do
         email=${email%$suffix}
         echo -en "$email"
     fi
-done < tempOutput.temp >> $domainName-SharedContacts.csv
+done < Get-GSharedContacts.output >> $domainName-SharedContacts.csv
 echo -e "\n"
 echo -e "\n"
 echo -e "\n"
