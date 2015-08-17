@@ -127,6 +127,10 @@ do
 	echo -e "ERROR - Value 'fullName' cannot be null, please put a value in that field then run the script again"
 	exit 1
     fi
+    if [ ! "$eaddress" ]; then
+	echo -e "ERROR - Value 'eaddress' cannot be null, please put a value in that field then run the script again"
+	exit 1
+    fi
     if [ ! "$phoneNumber" ]; then
 	echo -e "ERROR - Value 'phoneNumber' cannot be null, please put a value in that field then run the script again"
 	exit 1
