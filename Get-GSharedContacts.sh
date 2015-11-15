@@ -124,7 +124,7 @@ while [ $status -ne 1 ]; do
         echo -e "\n"
         echo -e "\n"
         echo -e "========================"
-        echo -e "Finished adding contacts... cleaning up and ending"
+        echo -e "Finished retrieving contacts... cleaning up and ending"
         rm -f tempToken.json
         rm -f token.json
         status=1
