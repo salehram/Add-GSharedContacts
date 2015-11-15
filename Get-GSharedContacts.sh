@@ -85,37 +85,58 @@ echo -e ""
 echo -e "Received access token: $accessToken"
 echo -e "=========================================================================================================\n"
 echo -e "Getting the shared contacts using Google API"
-curl -i -s https://www.google.com/m8/feeds/contacts/$domainName/full?max-results=500 -H "Authorization: Bearer $accessToken" > Get-GSharedContacts.output
-#now we need to write the output data into the csv file
-readAtom () {
-    local IFS=\>
-    read -d \< ENTITY CONTENT
-}
+status=0
+pageNum=1
+requestURL="https://www.google.com/m8/feeds/contacts/$domainName/full"
 echo -en "id,updated,name,email" > $domainName-SharedContacts.csv
-while readAtom; do
-    if [[ $ENTITY = "id" ]]; then
-        ExtraURL="http://www.google.com/m8/feeds/contacts/$domainName/base/"
-        IDContent=${CONTENT#$ExtraURL}
-        echo -en "\n$IDContent,"
+while [ $status -ne 1 ]; do
+    echo `curl -i -s $requestURL -H "Authorization: Bearer $accessToken" > Get-GSharedContacts.output`
+    #now we need to write the output data into the csv file
+    readAtom () {
+        local IFS=\>
+        read -d \< ENTITY CONTENT
+    }
+    while readAtom; do
+        if [[ $ENTITY = "id" ]]; then
+            ExtraURL="http://www.google.com/m8/feeds/contacts/$domainName/base/"
+            IDContent=${CONTENT#$ExtraURL}
+            echo -en "\n$IDContent,"
+        fi
+        if [[ $ENTITY = "updated" ]]; then
+            echo -en "$CONTENT,"
+        fi
+        if [[ $ENTITY = "title type='text'" ]]; then
+            echo -en "$CONTENT,"
+        fi
+        if [[ $ENTITY = *"gd:email rel='http://schemas.google.com/g/2005#work' address"* ]]; then
+            prefix="gd:email rel='http://schemas.google.com/g/2005#work' address='"
+            suffix="' primary='true'/"
+            email=${ENTITY#$prefix}
+            email=${email%$suffix}
+            echo -en "$email"
+        fi
+    done < Get-GSharedContacts.output >> $domainName-SharedContacts.csv
+    #
+    #checking to see if we have more pages in the returned result
+    nextPage=$(cat Get-GSharedContacts.output | grep -Po "<link rel='next' type='application\/atom\+xml' href(.*?)\/>")
+    if [[ ! "$nextPage" ]] ; then
+        echo -e "\n"
+        echo -e "\n"
+        echo -e "\n"
+        echo -e "========================"
+        echo -e "Finished adding contacts... cleaning up and ending"
+        rm -f tempToken.json
+        rm -f token.json
+        status=1
+        exit 0
+    else
+        echo -e "There are more pages, working on it."
+        #echo -e "$nextPage"
+        nextPageLink=$(echo $nextPage | grep -Po "https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#;?&//=]*)")
+        requestURL=$nextPageLink
+        status=0
+        let pageNum=$pageNum+1
+        echo "Retrieveing page number $pageNum"
+        echo -e "$nextPageLink"
     fi
-    if [[ $ENTITY = "updated" ]]; then
-        echo -en "$CONTENT,"
-    fi
-    if [[ $ENTITY = "title type='text'" ]]; then
-        echo -en "$CONTENT,"
-    fi
-    if [[ $ENTITY = *"gd:email rel='http://schemas.google.com/g/2005#work' address"* ]]; then
-        prefix="gd:email rel='http://schemas.google.com/g/2005#work' address='"
-        suffix="' primary='true'/"
-        email=${ENTITY#$prefix}
-        email=${email%$suffix}
-        echo -en "$email"
-    fi
-done < Get-GSharedContacts.output >> $domainName-SharedContacts.csv
-echo -e "\n"
-echo -e "\n"
-echo -e "\n"
-echo -e "========================"
-echo -e "Finished adding contacts... cleaning up and ending"
-rm -f tempToken.json
-rm -f token.json
+done
