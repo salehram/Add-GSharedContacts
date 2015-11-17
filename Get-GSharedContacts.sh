@@ -102,20 +102,32 @@ while [ $status -ne 1 ]; do
         if [[ $ENTITY = "id" ]]; then
             ExtraURL="http://www.google.com/m8/feeds/contacts/$domainName/base/"
             IDContent=${CONTENT#$ExtraURL}
-            echo -en "\n$IDContent,"
+            noLine=0
+            if [[ $IDContent == "$domainName" ]]; then
+                noLine=1
+            fi
+            if [[ $noLine != 1 ]]; then
+                echo -en "\n$IDContent,"
+            fi
         fi
         if [[ $ENTITY = "updated" ]]; then
-            echo -en "$CONTENT,"
+            if [[ $noLine != 1 ]]; then
+                echo -en "$CONTENT,"
+            fi
         fi
         if [[ $ENTITY = "title type='text'" ]]; then
-            echo -en "$CONTENT,"
+            if [[ $noLine != 1 ]]; then
+                echo -en "$CONTENT,"
+            fi
         fi
         if [[ $ENTITY = *"gd:email rel='http://schemas.google.com/g/2005#work' address"* ]]; then
             prefix="gd:email rel='http://schemas.google.com/g/2005#work' address='"
             suffix="' primary='true'/"
             email=${ENTITY#$prefix}
             email=${email%$suffix}
-            echo -en "$email"
+            if [[ $noLine != 1 ]]; then
+                echo -en "$email"
+            fi
         fi
     done < Get-GSharedContacts.output >> $domainName-SharedContacts.csv
     #
