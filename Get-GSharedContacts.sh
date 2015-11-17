@@ -3,7 +3,9 @@
 # I will try to keep a steady improvements on this script, and everyone is welcome to take it and change it the way they see more useful to them.
 # This started as a very basic script to add shared contacts for Google apps, but it will get more features added by time, as I work on them slowly due to my real life obligations.
 # -------------------------------------------------------------
-echo -e "Get-GSharedContacts (Version 0.0.1alpha) - saleh@is-linux.com\n"
+echo -e "\n---------------------------------------------------------------------------------------------------------"
+echo -e "------------------   Get-GSharedContacts (Version 0.0.2alpha) - saleh@is-linux.com   --------------------"
+echo -e "---------------------------------------------------------------------------------------------------------\n"
 echo -e "Preparing the required variables..."
 echo -e "========================================================================================================="
 echo -e "We will collect the following information:"
@@ -121,22 +123,19 @@ while [ $status -ne 1 ]; do
     nextPage=$(cat Get-GSharedContacts.output | grep -Po "<link rel='next' type='application\/atom\+xml' href(.*?)\/>")
     if [[ ! "$nextPage" ]] ; then
         echo -e "\n"
-        echo -e "\n"
-        echo -e "\n"
         echo -e "========================"
-        echo -e "Finished retrieving contacts... cleaning up and ending"
+        echo -e "Finished adding contacts... cleaning up and ending"
+        echo -e "   - Out file is: $domainName-SharedContacts.csv"
+        echo -e "   - Operation log file is: Get-GSharedContacts.output"
         rm -f tempToken.json
         rm -f token.json
         status=1
         exit 0
     else
-        echo -e "There are more pages, working on it."
-        #echo -e "$nextPage"
         nextPageLink=$(echo $nextPage | grep -Po "https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#;?&//=]*)")
         requestURL=$nextPageLink
         status=0
         let pageNum=$pageNum+1
-        echo "Retrieveing page number $pageNum"
-        echo -e "$nextPageLink"
+        echo -n "We got more pages. Retrieveing page number $pageNum"
     fi
 done
