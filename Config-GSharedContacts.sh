@@ -273,8 +273,13 @@ EOF
                         requestURL="https://www.google.com/m8/feeds/contacts/$domainName/full"
                         #
                         #
+                        echo "Log for curl" > Config-GSharedContacts-Delete.log
                         while [ $status -ne 1 ]; do
                             echo `curl -i -s $requestURL -H "Authorization: Bearer $accessToken" > Config-GSharedContacts-Delete.output`
+                            data=`cat Config-GSharedContacts-Delete.output`
+                            cat <<EOF >> Config-GSharedContacts-Delete.log
+$data
+EOF
                             #
                             #read the output and extract the id value
                             readAtom () {
@@ -290,32 +295,35 @@ EOF
                                         noLine=1
                                     fi
                                     if [[ $noLine != 1 ]]; then
-                                        echo -e curl -s --request DELETE "https://www.google.com/m8/feeds/contacts/$domainName/full/$IDContent" -H "Authorization: Bearer $accessToken" -H "If-Match: *" >> Config-GSharedContacts-Delete.log
-                                        curl -s --request DELETE "https://www.google.com/m8/feeds/contacts/$domainName/full/$IDContent" -H "Authorization: Bearer $accessToken" -H "If-Match: *"
-                                        echo -en "Deleting contact [$contactCounter]..\n"
-                                        let contactCounter=$contactCounter+1
+                                        echo -en "$IDContent\n"
                                     fi
                                 fi
-                            done < Config-GSharedContacts-Delete.output
+                            done < Config-GSharedContacts-Delete.output >> tempContactList.output
                             #
                             #checking to see if we have more pages in the returned result
                             nextPage=$(cat Config-GSharedContacts-Delete.output | grep -Po "<link rel='next' type='application\/atom\+xml' href(.*?)\/>")
-                            echo -e $nextPage >> Config-GSharedContacts-Delete.log
                             if [[ ! "$nextPage" ]] ; then
-                                echo -e "\n"
-                                echo -e "========================"
-                                echo -e "Finished deleting contacts... cleaning up and ending"
-                                rm -f tempToken.json
-                                rm -f token.json
+                                #here we don't have a next page link anymore.
                                 status=1
                             else
-                                nextPageLink=$(echo $nextPage | grep -Po "https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#;?&//=]*)")
+                                nextPageLink=$(echo -en $nextPage | grep -Po "https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#;?&=\/]*)(index)([-a-zA-Z0-9@:%_\+.~#;?&=\/]*)")
                                 requestURL=$nextPageLink
-                                echo -e $nextPageLink >> Config-GSharedContacts-Delete.log
                                 status=0
                                 let pageNum=$pageNum+1
                             fi
                         done
+                        while IFS=, read id; do
+                            curl -s --request DELETE "https://www.google.com/m8/feeds/contacts/$domainName/full/$id" -H "Authorization: Bearer $accessToken" -H "If-Match: *"
+                            echo -en "Deleting contact [$contactCounter]...\n"
+                            let contactCounter=$contactCounter+1
+                        done < tempContactList.output
+                        echo -e "\n"
+                        echo -e "========================"
+                        echo -e "Finished deleting contacts... cleaning up and ending"
+                        rm -f tempToken.json
+                        rm -f token.json
+                        rm -f tempContactList.output
+                        rm -f Config-GSharedContacts-Delete.output
                     ;;
                     #
                     #
