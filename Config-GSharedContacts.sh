@@ -268,7 +268,6 @@ EOF
                         #
                         echo -en "\nProceeding to delete ALL shared contacts\n"
                         status=0
-                        pageNum=1
                         contactCounter=1
                         requestURL="https://www.google.com/m8/feeds/contacts/$domainName/full"
                         #
@@ -309,7 +308,6 @@ EOF
                                 nextPageLink=$(echo -en $nextPage | grep -Po "https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#;?&=\/]*)(index)([-a-zA-Z0-9@:%_\+.~#;?&=\/]*)")
                                 requestURL=$nextPageLink
                                 status=0
-                                let pageNum=$pageNum+1
                             fi
                         done
                         while IFS=, read id; do
