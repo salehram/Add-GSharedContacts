@@ -48,3 +48,6 @@ Where:
 
 Example:  
 ``Config-GSharedContacts delete ~/Downloads/client_secrets.json ~/Documents/contacts.csv example.com``  
+
+### Notes on the CSV file for deleting a group of contacts:  
+It is enough to have one column in the CSV file for the delete operation, this column should be the value of the ID for each contact. This should retrieved using Get-GSharedContacts.sh script.
