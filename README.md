@@ -12,12 +12,13 @@ This small shell script will allow the adding, editing and deleting of domain sh
 
 # Usage
 **To add new contacts:**  
-``Config-GSharedContacts [METHOD:new,edit,delete] [FULL_PATH_TO_CLIENT_SECRETS.JSON] [FULL_PATH_TO_CONTACTS_CSV_FILE] [DOMAIN_NAME]``  
-Where:  
+``Config-GSharedContacts.sh [METHOD:new,edit,delete] [FULL_PATH_TO_CLIENT_SECRETS.JSON] [FULL_PATH_TO_CONTACTS_CSV_FILE] [DOMAIN_NAME]``  
+
+Where:
 * [METHOD:new,edit,delete] is the action to be used, right now only new/delete are functional.
 * [FULL_PATH_TO_CLIENT_SECRETS.JSON] is the full path to the client_secrets.json file, including the file name.
 * [FULL_PATH_TO_CONTACTS_CSV_FILE] is the full file name and path for the CSV file that holds the contacts you want to add.
-* [DOMAIN_NAME] is the domain name which we want to add the contacts on it
+* [DOMAIN_NAME] is the domain name which we want to add the contacts on it  
 
 Example:  
 Config-GSharedContacts new ~/Downloads/client_secrets.json ~/Documents/contacts.csv example.com
