@@ -4,7 +4,7 @@
 # This started as a very basic script to add shared contacts for Google apps, but it will get more features added by time, as I work on them slowly due to my real life obligations.
 # -------------------------------------------------------------
 echo -e "\n---------------------------------------------------------------------------------------------------------"
-echo -e "-----------------   Config-GSharedContacts (Version 0.0.2alpha) - saleh@is-linux.com   ------------------"
+echo -e "-----------------   Config-GSharedContacts (Version 0.0.3-alpha) - saleh@is-linux.com   ------------------"
 echo -e "---------------------------------------------------------------------------------------------------------\n"
 echo -e "Preparing the required variables..."
 echo -e "We will collect the following information:"
