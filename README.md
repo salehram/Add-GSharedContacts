@@ -1,4 +1,4 @@
-# Add-GSharedContacts
+# GApps-Domain-Shared-Contacts
 Current version: 0.0.2alpha
 This small shell script will allow the adding, editing and deleting of domain shared contacts on Google apps...
 
